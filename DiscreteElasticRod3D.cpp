@@ -1,16 +1,60 @@
 /*
     DiscreteElasticRod3D.cpp
 
-    Demonstrates a 3D Discrete Elastic Rod (with optional coily hair parameters) and now
-    includes a simple "phase lock" mechanism so adjacent twist angles stay close.
+    Overview:
+      This file implements a physics-based simulation to model highly coiled hair (Type 4 hair) 
+      using a 3D Discrete Elastic Rod (DER) approach. The simulation initializes a tight-coiled rod 
+      that mimics the complex geometry of highly coiled hair and applies various physical forces to 
+      capture realistic dynamics.
 
-    Key Changes:
-      • Added 'phaseLockK' in the rod class.
-      • In computeForces(), after normal twist, apply a "phase locking" step that penalizes
-        differences in twistAngles[i] - twistAngles[i-1].
-      • In the GUI, show a slider for 'PhaseLockK'.
-      • NEW: Twist angle wrapping in step() so that twistAngles are clamped to the interval [-π, π]
+    Key Features:
+      • **Node-Based Representation:**  
+          The rod is discretized into a series of nodes, with each segment having associated rest 
+          lengths, twist angles, and local frames (tangent, normal, and binormal).
+
+      • **Physical Forces Modeled:**  
+          - **Stretching:** Ensures each rod segment maintains its natural length.
+          - **Bending:** Simulates curvature by applying torques based on the angle between adjacent 
+            segments.
+          - **Twisting:** Introduces twist along the rod’s axis; twist angles are wrapped to prevent 
+            uncontrolled rotations.
+          - **Phase Locking:** A novel mechanism that penalizes differences between adjacent twist 
+            angles, helping to maintain a stable and consistent curl pattern.
+
+      • **Interactive Parameter Control:**  
+          An ImGui-based GUI provides real-time sliders for:
+            - Number of nodes
+            - Stretch stiffness (StretchK)
+            - Bend stiffness (BendK)
+            - Twist stiffness (TwistK)
+            - Phase lock stiffness (PhaseLockK)
+            - Damping factor
+          This enables immediate visual feedback on how each parameter affects the simulation.
+
+      • **Rendering and Interaction:**  
+          Utilizes GLFW for windowing and input, and OpenGL for rendering the simulation. The code 
+          includes an adjustable camera system, allowing for dynamic visualization of the rod's behavior.
+
+    Purpose:
+      The simulation serves as a proof-of-concept to demonstrate the feasibility of accurately modeling 
+      the dynamics of highly coiled hair. By adjusting the parameters, the model can represent a range 
+      of behaviors—from natural, stable curls to dynamic, bouncy movements. This work not only addresses 
+      technical challenges in hair simulation but also contributes to the inclusive representation of Type 4 
+      hair in digital media, with potential applications in video games, animation, and film.
+
+    Usage:
+      - Compile and run the project to visualize the simulation.
+      - Use the provided GUI sliders to experiment with different parameter combinations and observe their 
+        effects on the hair simulation.
+      - A screen recording demonstrating various parameter combinations will be attached for further review.
+
+    Dependencies:
+      - GLFW for window management and input handling.
+      - OpenGL for rendering graphics.
+      - ImGui for GUI creation and interactive control.
+      - Standard C++ libraries for mathematical operations and data structures.
 */
+
 
 #include <cstdio>
 #include <cstdlib>
